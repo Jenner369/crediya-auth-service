@@ -47,9 +47,20 @@ public class RegisterUserHandlerV1 implements RouteHandler {
     public Mono<ServerResponse> handle(ServerRequest serverRequest) {
         return serverRequest
                 .bodyToMono(RegisterUserDTO.class)
+                .doOnNext(user -> {
+                    var rid = serverRequest.exchange().getRequest().getId();
+                    log.info("[{}] POST /api/v1/usuarios - Intento de registro", rid);
+                })
                 .flatMap(dtoValidator::validate)
                 .map(userDTOMapper::toModelFromRegisterDTO)
                 .flatMap(registerUserUseCase::execute)
+                .doOnNext(user -> {
+                    var rid = serverRequest.exchange().getRequest().getId();
+                    log.info("[{}] POST /api/v1/usuarios - Registro exitoso para el usuario con ID: {}",
+                            rid,
+                            user.getId()
+                    );
+                })
                 .map(userDTOMapper::toUserDTOFromModel)
                 .flatMap(user -> ServerResponse.ok().bodyValue(user));
     }

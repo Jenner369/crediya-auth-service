@@ -62,17 +62,38 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
                     .findFirst()
                     .orElse("Validación fallida");
 
-            log.warn("ConstraintViolationException en {}: {}", request.path(), errorMessage);
+            log.warn("[{}] ConstraintViolationException en {} {}: {}",
+                    request.exchange().getRequest().getId(),
+                    request.method().name(),
+                    request.path(),
+                    errorMessage
+            );
         } else if (error instanceof DomainException de) {
             errorMessage = de.getMessage();
 
-            log.warn("DomainException en {}: {}", request.path(), de.getMessage());
+            log.warn("[{}] DomainException en {} {}: {}",
+                    request.exchange().getRequest().getId(),
+                    request.method().name(),
+                    request.path(),
+                    de.getMessage()
+            );
         } else if (error instanceof ValidationException ve) {
             errorMessage = ve.getMessage();
 
-            log.warn("ValidationException en {}: {}", request.path(), ve.getMessage());
+            log.warn("[{}] ValidationException en {} {}: {}",
+                    request.exchange().getRequest().getId(),
+                    request.method().name(),
+                    request.path(),
+                    ve.getMessage()
+            );
         } else {
-            log.error("Excepción no controlada en {}: {}", request.path(), error.getMessage(), error);
+            log.error("[{}] Excepción no controlada {} {}: {}",
+                    request.exchange().getRequest().getId(),
+                    request.method().name(),
+                    request.path(),
+                    error.getMessage(),
+                    error
+            );
         }
 
         return errorMessage;
