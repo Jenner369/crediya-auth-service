@@ -13,15 +13,15 @@ import java.util.function.Supplier;
 @RequiredArgsConstructor
 public class TransactionalGatewayImpl implements TransactionalGateway {
 
-    private final TransactionalOperator txOperator;
+    private final TransactionalOperator transactionalOperator;
 
     @Override
     public <T> Mono<T> execute(Supplier<Mono<T>> action) {
-        return txOperator.transactional(action.get());
+        return transactionalOperator.transactional(action.get());
     }
 
     @Override
     public <T> Flux<T> executeMany(Supplier<Flux<T>> action) {
-        return txOperator.transactional(action.get());
+        return transactionalOperator.transactional(action.get());
     }
 }
