@@ -86,7 +86,8 @@ class UserRouterV1Test {
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
-                Roles.CLIENT.getId().toString()
+                Roles.CLIENT.getId().toString(),
+                new BigDecimal("3000000")
         );
 
         when(dtoValidator.validate(dto)).thenReturn(Mono.just(dto));
@@ -133,7 +134,8 @@ class UserRouterV1Test {
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
-                Roles.CLIENT.getId().toString()
+                Roles.CLIENT.getId().toString(),
+                new BigDecimal("3000000")
         );
 
         when(uuidValidator.validate(sampleId.toString())).thenReturn(Mono.just(sampleId));

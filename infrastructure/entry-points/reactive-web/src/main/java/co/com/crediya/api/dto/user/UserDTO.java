@@ -1,5 +1,7 @@
 package co.com.crediya.api.dto.user;
 
+import java.math.BigDecimal;
+
 public record UserDTO(
         String id,
         String name,
@@ -9,6 +11,7 @@ public record UserDTO(
         String email,
         String identityDocument,
         String telephone,
-        String roleId
+        String roleId,
+        BigDecimal baseSalary
 ) {
 }
