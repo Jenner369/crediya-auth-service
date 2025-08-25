@@ -9,9 +9,9 @@ spring:
     add-properties: false
 
   flyway:
-    url: jdbc:mysql://localhost:3306/crediya
-    user: crediya_user
-    password: crediya_pass
+    url: jdbc:mysql://localhost:3306/crediya_auth
+    user: crediya_auth_user
+    password: crediya_auth_pass
     locations: classpath:db/migration
     baseline-on-migrate: true
 
@@ -32,6 +32,6 @@ adapters:
   r2dbc:
     host: localhost
     port: 3306
-    database: crediya
-    username: crediya_user
-    password: crediya_pass
+    database: crediya_auth
+    username: crediya_auth_user
+    password: crediya_auth_pass
