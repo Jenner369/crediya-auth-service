@@ -8,6 +8,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface UserDTOMapper {
     User toModelFromRegisterDTO(RegisterUserDTO registerUserDTO);
-    RegisterUserDTO toRegisterDTOFromModel(User user);
     UserDTO toUserDTOFromModel(User user);
 }
