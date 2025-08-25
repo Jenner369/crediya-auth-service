@@ -42,6 +42,8 @@ public class RegisterUserHandlerV1 implements RouteHandler {
             content = @Content(schema = @Schema(implementation = UserDTO.class)))
     @ApiResponse(responseCode = "400", description = "Error de validación",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+    @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
     public Mono<ServerResponse> handle(ServerRequest serverRequest) {
         return serverRequest
                 .bodyToMono(RegisterUserDTO.class)

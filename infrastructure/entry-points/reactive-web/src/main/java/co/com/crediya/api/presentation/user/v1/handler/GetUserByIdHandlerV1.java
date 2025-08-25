@@ -49,6 +49,8 @@ public class GetUserByIdHandlerV1 implements RouteHandler {
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
     @ApiResponse(responseCode = "404", description = "Usuario no encontrado",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+    @ApiResponse(responseCode = "500", description = "Error interno del servidor",
+            content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
     public Mono<ServerResponse> handle(ServerRequest serverRequest) {
         return Mono.fromCallable(serverRequest.pathVariable("id")::toString)
                 .flatMap(uuidValidator::validate)
