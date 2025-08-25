@@ -3,7 +3,7 @@ package co.com.crediya.api.exception;
 import co.com.crediya.api.dto.common.ErrorResponseDTO;
 import co.com.crediya.api.validation.exception.ValidationException;
 import co.com.crediya.exception.NotFoundException;
-import co.com.crediya.model.common.gateways.exceptions.DomainException;
+import co.com.crediya.model.common.exceptions.DomainException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

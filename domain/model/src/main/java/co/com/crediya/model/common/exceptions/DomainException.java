@@ -1,4 +1,4 @@
-package co.com.crediya.model.common.gateways.exceptions;
+package co.com.crediya.model.common.exceptions;
 
 import lombok.Getter;
 
