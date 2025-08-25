@@ -17,7 +17,7 @@ public class UserRouterV1 {
     @Bean
     @RouterOperations({
             @RouterOperation(
-                    path = "/api/v1/usuarios/",
+                    path = "/api/v1/usuarios",
                     beanClass = RegisterUserHandlerV1.class,
                     beanMethod = "handle",
                     method = RequestMethod.POST
@@ -37,8 +37,8 @@ public class UserRouterV1 {
                 .route()
                 .path("/api/v1/usuarios", builder ->
                         builder
+                                .POST("", registerUserHandlerV1::handle)
                                 .GET("/{id}", getUserByIdHandlerV1::handle)
-                                .POST("/", registerUserHandlerV1::handle)
                 ).build();
     }
 }

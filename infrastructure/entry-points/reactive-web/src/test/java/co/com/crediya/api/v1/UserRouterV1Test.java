@@ -96,7 +96,7 @@ class UserRouterV1Test {
         when(userDTOMapper.toUserDTOFromModel(user)).thenReturn(responseDTO);
 
         webTestClient.post()
-                .uri("/api/v1/usuarios/")
+                .uri("/api/v1/usuarios")
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(dto)
                 .exchange()
