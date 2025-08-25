@@ -21,7 +21,6 @@ public class RegisterUserUseCase implements ReactiveUseCase<User, Mono<User>> {
         return Mono.fromRunnable(user::validate)
                 .then(transactionalGateway.execute(
                         () -> validateEmailNotExists(user)
-                                .flatMap(this::validateEmailNotExists)
                                 .flatMap(this::validateIdentityNotExists)
                                 .flatMap(this::assignDefaultRole)
                                 .flatMap(userRepository::save)
