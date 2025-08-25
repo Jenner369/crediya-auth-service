@@ -39,7 +39,6 @@ public record RegisterUserDTO(
 
         @Schema(description = "Salario base del usuario", example = "2500000")
         @NotNull(message = "El salario base es obligatorio")
-        @DecimalMin(value = "0.0", inclusive = false, message = "El salario debe ser mayor a 0")
         BigDecimal baseSalary
 ) {
 }
