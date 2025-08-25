@@ -62,7 +62,7 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
                     .findFirst()
                     .orElse("Validación fallida");
 
-            log.warn("[{}] ConstraintViolationException en {} {}: {}",
+            log.warn("[{}] ConstraintViolationException {} {}: {}",
                     request.exchange().getRequest().getId(),
                     request.method().name(),
                     request.path(),
@@ -71,8 +71,10 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         } else if (error instanceof DomainException de) {
             errorMessage = de.getMessage();
 
-            log.warn("[{}] DomainException en {} {}: {}",
+            log.warn("[{}] {} with code {} {} {}: {}",
                     request.exchange().getRequest().getId(),
+                    de.getClass().getSimpleName(),
+                    de.getCode(),
                     request.method().name(),
                     request.path(),
                     de.getMessage()
@@ -80,8 +82,10 @@ public class GlobalErrorAttributes extends DefaultErrorAttributes {
         } else if (error instanceof ValidationException ve) {
             errorMessage = ve.getMessage();
 
-            log.warn("[{}] ValidationException en {} {}: {}",
+            log.warn("[{}] {} on field '{}' {} {}: {}",
                     request.exchange().getRequest().getId(),
+                    ve.getClass().getSimpleName(),
+                    ve.getField(),
                     request.method().name(),
                     request.path(),
                     ve.getMessage()
