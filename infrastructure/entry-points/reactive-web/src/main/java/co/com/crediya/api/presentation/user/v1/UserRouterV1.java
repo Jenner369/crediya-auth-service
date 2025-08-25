@@ -35,7 +35,7 @@ public class UserRouterV1 {
     ) {
         return RouterFunctions
                 .route()
-                .path("/api/v1/user", builder ->
+                .path("/api/v1/usuarios", builder ->
                         builder
                                 .GET("/{id}", getUserByIdHandlerV1::handle)
                                 .POST("/", registerUserHandlerV1::handle)
