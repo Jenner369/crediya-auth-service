@@ -6,10 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Table("users")
@@ -22,7 +22,8 @@ public class UserEntity implements HasUUID {
     private UUID id;
     private String name;
     private String lastName;
-    @Column
+    private LocalDate birthDate;
+    private String address;
     private String email;
     private String identityDocument;
     private String telephone;

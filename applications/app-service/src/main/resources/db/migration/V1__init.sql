@@ -8,6 +8,8 @@ CREATE TABLE users (
                        id CHAR(36) NOT NULL PRIMARY KEY,
                        name VARCHAR(100) NOT NULL,
                        last_name VARCHAR(100),
+                       birth_date DATE,
+                       address VARCHAR(255),
                        email VARCHAR(150) NOT NULL UNIQUE,
                        identity_document VARCHAR(20) NOT NULL UNIQUE,
                        telephone VARCHAR(20),

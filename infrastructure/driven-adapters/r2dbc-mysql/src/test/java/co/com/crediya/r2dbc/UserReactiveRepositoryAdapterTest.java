@@ -16,6 +16,7 @@ import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,9 +37,31 @@ class UserReactiveRepositoryAdapterTest {
 
     private final UUID sampleId = UUID.randomUUID();
     private final UserEntity sampleEntity
-            = new UserEntity(sampleId, "Jenner", "Durand", "jenner@crediya.com", "123456", "98697642", Roles.ADMIN.getId(), new BigDecimal("500000"));
+            = new UserEntity(
+                    sampleId,
+                "Jenner",
+                "Durand",
+                LocalDate.of(1990,12,12),
+                null,
+                "jenner@crediya.com",
+                "123456",
+                "98697642",
+                Roles.ADMIN.getId(),
+                new BigDecimal("500000")
+    );
     private final User sampleUser
-            = new User(sampleId, "Jenner", "Durand", "jenner@crediya.com", "123456", "98697642", Roles.ADMIN.getId(), new BigDecimal("500000"));
+            = new User(
+                    sampleId,
+            "Jenner",
+            "Durand",
+            LocalDate.of(1990,12,12),
+            null,
+            "jenner@crediya.com",
+            "123456",
+            "98697642",
+            Roles.ADMIN.getId(),
+            new BigDecimal("500000")
+    );
 
 
     @Test

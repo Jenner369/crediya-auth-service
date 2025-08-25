@@ -19,6 +19,12 @@ public record RegisterUserDTO(
         @NotBlank(message = "El apellido es obligatorio")
         String lastName,
 
+        @Schema(description = "Fecha de nacimiento del usuario en formato AAAA-MM-DD", example = "1990-05-15")
+        String birthDate,
+
+        @Schema(description = "Dirección del usuario", example = "Calle 123 #45-67")
+        String address,
+
         @Schema(description = "Email del usuario", example = "admin@pragma.co")
         @Email(message = "El email debe ser válido")
         @NotBlank(message = "El email es obligatorio")
@@ -29,7 +35,6 @@ public record RegisterUserDTO(
         String identityDocument,
 
         @Schema(description = "Teléfono del usuario", example = "3001234567")
-        @NotBlank(message = "El teléfono es obligatorio")
         String telephone,
 
         @Schema(description = "Salario base del usuario", example = "2500000")

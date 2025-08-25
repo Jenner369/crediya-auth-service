@@ -25,6 +25,7 @@ import reactor.core.publisher.Mono;
 import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @ContextConfiguration(classes = {UserRouterV1.class, RegisterUserHandlerV1.class, GetUserByIdHandlerV1.class})
@@ -55,6 +56,8 @@ class UserRouterV1Test {
         var dto = new RegisterUserDTO(
                 "Jenner",
                 "Durand",
+                "1996-12-12",
+                null,
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
@@ -65,6 +68,8 @@ class UserRouterV1Test {
                 sampleId,
                 "Jenner",
                 "Durand",
+                LocalDate.of(1996, 12, 12),
+                null,
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
@@ -76,6 +81,8 @@ class UserRouterV1Test {
                 sampleId.toString(),
                 "Jenner",
                 "Durand",
+                "1996-12-12",
+                null,
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
@@ -108,6 +115,8 @@ class UserRouterV1Test {
                 sampleId,
                 "Jenner",
                 "Durand",
+                LocalDate.of(1991, 1, 1),
+                "Calle 123 # 45-67",
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
@@ -119,6 +128,8 @@ class UserRouterV1Test {
                 sampleId.toString(),
                 "Jenner",
                 "Durand",
+                "1991-01-01",
+                "Calle 123 # 45-67",
                 "jenner@crediya.com",
                 "12345678",
                 "98765432",
