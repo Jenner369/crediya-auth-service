@@ -2,12 +2,9 @@ package co.com.crediya.r2dbc.adapter;
 
 import co.com.crediya.model.role.Role;
 import co.com.crediya.model.role.gateways.RoleRepository;
-import co.com.crediya.model.user.User;
 import co.com.crediya.r2dbc.entity.RoleEntity;
-import co.com.crediya.r2dbc.entity.UserEntity;
 import co.com.crediya.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.crediya.r2dbc.repository.RoleReactiveRepository;
-import co.com.crediya.r2dbc.repository.UserReactiveRepository;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
