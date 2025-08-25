@@ -17,13 +17,13 @@ public class UserRouterV1 {
     @Bean
     @RouterOperations({
             @RouterOperation(
-                    path = "/api/v1/user/",
+                    path = "/api/v1/usuarios/",
                     beanClass = RegisterUserHandlerV1.class,
                     beanMethod = "handle",
                     method = RequestMethod.POST
             ),
             @RouterOperation(
-                    path = "/api/v1/user/{id}",
+                    path = "/api/v1/usuarios/{id}",
                     beanClass = GetUserByIdHandlerV1.class,
                     beanMethod = "handle",
                     method = RequestMethod.GET

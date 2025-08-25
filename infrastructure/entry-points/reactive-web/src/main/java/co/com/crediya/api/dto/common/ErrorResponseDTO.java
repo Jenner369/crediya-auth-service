@@ -11,7 +11,7 @@ public record ErrorResponseDTO(
         @Schema(description = "Momento en que ocurrió el error", example = "2025-08-24T15:57:19.192Z")
         Date timestamp,
 
-        @Schema(description = "Path del request", example = "/api/v1/user/")
+        @Schema(description = "Path del request", example = "/api/v1/usuarios/")
         String path,
 
         @Schema(description = "Código HTTP", example = "400")
