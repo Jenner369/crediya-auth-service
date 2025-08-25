@@ -1,6 +1,6 @@
 package co.com.crediya.model.user.exceptions;
 
-import co.com.crediya.model.common.exceptions.DomainException;
+import co.com.crediya.model.common.exception.DomainException;
 
 public class EmailInvalidException extends DomainException {
     public EmailInvalidException() {

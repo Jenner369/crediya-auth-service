@@ -1,6 +1,6 @@
 package co.com.crediya.exception;
 
-import co.com.crediya.model.common.exceptions.DomainException;
+import co.com.crediya.model.common.exception.DomainException;
 
 public class EmailAlreadyExistsException extends DomainException {
     public EmailAlreadyExistsException(String email) {
