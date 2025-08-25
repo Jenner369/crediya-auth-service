@@ -2,7 +2,6 @@ package co.com.crediya.api.presentation.user.v1;
 
 import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdHandlerV1;
 import co.com.crediya.api.presentation.user.v1.handler.RegisterUserHandlerV1;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
 import org.springframework.context.annotation.Bean;
