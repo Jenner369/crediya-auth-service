@@ -28,6 +28,12 @@ public class UserRouterV1 {
                     beanClass = GetUserByIdHandlerV1.class,
                     beanMethod = "handle",
                     method = RequestMethod.GET
+            ),
+            @RouterOperation(
+                    path = "/api/v1/usuarios/identity-document/{identityDocument}",
+                    beanClass = GetUserByIdentityDocumentHandlerV1.class,
+                    beanMethod = "handle",
+                    method = RequestMethod.GET
             )
     })
     public RouterFunction<ServerResponse> routerFunction(
