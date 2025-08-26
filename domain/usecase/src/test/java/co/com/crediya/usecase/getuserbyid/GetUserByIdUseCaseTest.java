@@ -49,7 +49,7 @@ class GetUserByIdUseCaseTest {
     }
 
     @Test
-    void shouldRegisterUserSuccessfully() {
+    void shouldGetUserByIdDocumentSuccessfully() {
         when(userRepository.findById(userId)).thenReturn(Mono.just(user));
 
         StepVerifier.create(getUserByIdUseCase.execute(userId))
