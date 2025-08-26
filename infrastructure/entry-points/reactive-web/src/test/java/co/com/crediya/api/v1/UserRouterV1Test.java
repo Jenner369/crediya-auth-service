@@ -7,10 +7,12 @@ import co.com.crediya.api.presentation.contract.DTOValidator;
 import co.com.crediya.api.presentation.contract.UUIDValidator;
 import co.com.crediya.api.presentation.user.v1.UserRouterV1;
 import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdHandlerV1;
+import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdentityDocumentHandlerV1;
 import co.com.crediya.api.presentation.user.v1.handler.RegisterUserHandlerV1;
 import co.com.crediya.model.role.enums.Roles;
 import co.com.crediya.model.user.User;
 import co.com.crediya.usecase.getuserbyid.GetUserByIdUseCase;
+import co.com.crediya.usecase.getuserbyidentitydocument.GetUserByIdentityDocumentUseCase;
 import co.com.crediya.usecase.registeruser.RegisterUserUseCase;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,7 +30,12 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-@ContextConfiguration(classes = {UserRouterV1.class, RegisterUserHandlerV1.class, GetUserByIdHandlerV1.class})
+@ContextConfiguration(classes = {
+        UserRouterV1.class,
+        RegisterUserHandlerV1.class,
+        GetUserByIdHandlerV1.class,
+        GetUserByIdentityDocumentHandlerV1.class,
+})
 @WebFluxTest
 class UserRouterV1Test {
 
@@ -40,6 +47,9 @@ class UserRouterV1Test {
 
     @MockitoBean
     private GetUserByIdUseCase getUserByIdUseCase;
+
+    @MockitoBean
+    private GetUserByIdentityDocumentUseCase getUserByIdentityDocumentUseCase;
 
     @MockitoBean
     private UserDTOMapper userDTOMapper;
@@ -144,6 +154,52 @@ class UserRouterV1Test {
 
         webTestClient.get()
                 .uri("/api/v1/usuarios/{id}", sampleId.toString())
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UserDTO.class)
+                .value(userResponse -> {
+                    Assertions
+                            .assertThat(userResponse.email())
+                            .isEqualTo("jenner@crediya.com");
+                });
+    }
+
+    @Test
+    void testGetUserByIdentityDocumentSuccess() {
+        var identityDocument = "12345678";
+        var sampleId = UUID.randomUUID();
+
+        var user = new User(
+                sampleId,
+                "Jenner",
+                "Durand",
+                LocalDate.of(1991, 1, 1),
+                "Calle 123 # 45-67",
+                "jenner@crediya.com",
+                "12345678",
+                "98765432",
+                Roles.CLIENT.getId(),
+                new BigDecimal("3000000")
+        );
+
+        var responseDTO = new UserDTO(
+                sampleId.toString(),
+                "Jenner",
+                "Durand",
+                "1991-01-01",
+                "Calle 123 # 45-67",
+                "jenner@crediya.com",
+                "12345678",
+                "98765432",
+                Roles.CLIENT.getId().toString(),
+                new BigDecimal("3000000")
+        );
+
+        when(getUserByIdentityDocumentUseCase.execute(identityDocument)).thenReturn(Mono.just(user));
+        when(userDTOMapper.toUserDTOFromModel(user)).thenReturn(responseDTO);
+
+        webTestClient.get()
+                .uri("/api/v1/usuarios/identity-document/{identityDocument}", identityDocument)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UserDTO.class)

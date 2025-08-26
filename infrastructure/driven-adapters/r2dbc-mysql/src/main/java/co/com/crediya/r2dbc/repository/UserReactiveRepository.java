@@ -9,11 +9,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserReactiveRepository extends ReactiveCrudRepository<UserEntity, UUID>, ReactiveQueryByExampleExecutor<UserEntity> {
-    Mono<Optional<UserEntity>> findByEmail(String email);
+    Mono<UserEntity> findByEmail(String email);
     Mono<Boolean> existsByEmail(String email);
     Mono<Boolean> existsByEmailAndIdNot(String email, UUID excludeId);
 
-    Mono<Optional<UserEntity>> findByIdentityDocument(String identityDocument);
+    Mono<UserEntity> findByIdentityDocument(String identityDocument);
     Mono<Boolean> existsByIdentityDocument(String identityDocument);
     Mono<Boolean> existsByIdentityDocumentAndIdNot(String identityDocument, UUID excludeId);
 }

@@ -1,6 +1,7 @@
 package co.com.crediya.api.presentation.user.v1;
 
 import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdHandlerV1;
+import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdentityDocumentHandlerV1;
 import co.com.crediya.api.presentation.user.v1.handler.RegisterUserHandlerV1;
 import org.springdoc.core.annotations.RouterOperation;
 import org.springdoc.core.annotations.RouterOperations;
@@ -31,13 +32,15 @@ public class UserRouterV1 {
     })
     public RouterFunction<ServerResponse> routerFunction(
             RegisterUserHandlerV1 registerUserHandlerV1,
-            GetUserByIdHandlerV1 getUserByIdHandlerV1
+            GetUserByIdHandlerV1 getUserByIdHandlerV1,
+            GetUserByIdentityDocumentHandlerV1 getUserByIdentityDocumentHandlerV1
     ) {
         return RouterFunctions
                 .route()
                 .path("/api/v1/usuarios", builder ->
                         builder
                                 .POST("", registerUserHandlerV1::handle)
+                                .GET("identity-document/{identityDocument}", getUserByIdentityDocumentHandlerV1::handle)
                                 .GET("/{id}", getUserByIdHandlerV1::handle)
                 ).build();
     }

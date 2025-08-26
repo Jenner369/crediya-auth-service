@@ -88,11 +88,11 @@ class UserReactiveRepositoryAdapterTest {
 
     @Test
     void mustFindByEmail() {
-        when(repository.findByEmail("jenner@crediya.com")).thenReturn(Mono.just(Optional.of(sampleEntity)));
+        when(repository.findByEmail("jenner@crediya.com")).thenReturn(Mono.just(sampleEntity));
         when(mapper.map(sampleEntity, User.class)).thenReturn(sampleUser);
 
         StepVerifier.create(repositoryAdapter.findByEmail("jenner@crediya.com"))
-                .expectNext(Optional.of(sampleUser))
+                .expectNext(sampleUser)
                 .verifyComplete();
     }
 
@@ -101,7 +101,7 @@ class UserReactiveRepositoryAdapterTest {
         when(repository.findByEmail("unknown@crediya.com")).thenReturn(Mono.empty());
 
         StepVerifier.create(repositoryAdapter.findByEmail("unknown@crediya.com"))
-                .expectNext(Optional.empty())
+                .expectNextCount(0)
                 .verifyComplete();
     }
 
@@ -125,11 +125,11 @@ class UserReactiveRepositoryAdapterTest {
 
     @Test
     void mustFindByIdentityDocument() {
-        when(repository.findByIdentityDocument("123456")).thenReturn(Mono.just(Optional.of(sampleEntity)));
+        when(repository.findByIdentityDocument("123456")).thenReturn(Mono.just(sampleEntity));
         when(mapper.map(sampleEntity, User.class)).thenReturn(sampleUser);
 
         StepVerifier.create(repositoryAdapter.findByIdentityDocument("123456"))
-                .expectNext(Optional.of(sampleUser))
+                .expectNext(sampleUser)
                 .verifyComplete();
     }
 
@@ -138,7 +138,7 @@ class UserReactiveRepositoryAdapterTest {
         when(repository.findByIdentityDocument("000000")).thenReturn(Mono.empty());
 
         StepVerifier.create(repositoryAdapter.findByIdentityDocument("000000"))
-                .expectNext(Optional.empty())
+                .expectNextCount(0)
                 .verifyComplete();
     }
 

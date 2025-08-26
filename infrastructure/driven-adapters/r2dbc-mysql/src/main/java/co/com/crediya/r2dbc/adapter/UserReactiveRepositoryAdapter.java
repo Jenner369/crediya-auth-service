@@ -27,10 +27,9 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<Optional<User>> findByEmail(String email) {
+    public Mono<User> findByEmail(String email) {
         return repository.findByEmail(email)
-                .map(userEntity -> userEntity.map(this::toEntity))
-                .defaultIfEmpty(Optional.empty());
+                .map(this::toEntity);
     }
 
     @Override
@@ -44,10 +43,9 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     }
 
     @Override
-    public Mono<Optional<User>> findByIdentityDocument(String identityDocument) {
+    public Mono<User> findByIdentityDocument(String identityDocument) {
         return repository.findByIdentityDocument(identityDocument)
-                .map(userEntity -> userEntity.map(this::toEntity))
-                .defaultIfEmpty(Optional.empty());
+                .map(this::toEntity);
     }
 
     @Override
