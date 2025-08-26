@@ -1,13 +1,17 @@
 package co.com.crediya.config;
 
+import co.com.crediya.model.common.gateways.TransactionalGateway;
+import co.com.crediya.model.role.gateways.RoleRepository;
+import co.com.crediya.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
-public class UseCasesConfigTest {
+class UseCasesConfigTest {
 
     @Test
     void testUseCaseBeansExist() {
@@ -29,6 +33,21 @@ public class UseCasesConfigTest {
     @Configuration
     @Import(UseCasesConfig.class)
     static class TestConfig {
+
+        @Bean
+        public UserRepository userRepository() {
+            return mock(UserRepository.class);
+        }
+
+        @Bean
+        public RoleRepository roleRepository() {
+            return mock(RoleRepository.class);
+        }
+
+        @Bean
+        public TransactionalGateway transactionalGateway() {
+            return mock(TransactionalGateway.class);
+        }
 
         @Bean
         public MyUseCase myUseCase() {
