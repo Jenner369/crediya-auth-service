@@ -2,6 +2,8 @@ package co.com.crediya.api.v1;
 
 import co.com.crediya.api.dto.user.RegisterUserDTO;
 import co.com.crediya.api.dto.user.UserDTO;
+import co.com.crediya.api.exception.GlobalErrorAttributes;
+import co.com.crediya.api.exception.GlobalExceptionHandler;
 import co.com.crediya.api.mapper.UserDTOMapper;
 import co.com.crediya.api.presentation.contract.DTOValidator;
 import co.com.crediya.api.presentation.contract.UUIDValidator;
@@ -14,10 +16,14 @@ import co.com.crediya.model.user.User;
 import co.com.crediya.usecase.getuserbyid.GetUserByIdUseCase;
 import co.com.crediya.usecase.getuserbyidentitydocument.GetUserByIdentityDocumentUseCase;
 import co.com.crediya.usecase.registeruser.RegisterUserUseCase;
+import jakarta.validation.ConstraintViolationException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -28,13 +34,17 @@ import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Set;
 import java.util.UUID;
 
 @ContextConfiguration(classes = {
+        GlobalExceptionHandler.class,
+        GlobalErrorAttributes.class,
         UserRouterV1.class,
         RegisterUserHandlerV1.class,
         GetUserByIdHandlerV1.class,
         GetUserByIdentityDocumentHandlerV1.class,
+        UserRouterV1Test.TestConfig.class
 })
 @WebFluxTest
 class UserRouterV1Test {
@@ -59,6 +69,14 @@ class UserRouterV1Test {
 
     @MockitoBean
     private UUIDValidator uuidValidator;
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        public WebProperties.Resources webPropertiesResources() {
+            return new WebProperties.Resources();
+        }
+    }
 
     @Test
     void testRegisterUserSuccess() {
@@ -209,4 +227,31 @@ class UserRouterV1Test {
                             .isEqualTo("jenner@crediya.com");
                 });
     }
+
+    @Test
+    void testRegisterUserValidationError() {
+        var dto = new RegisterUserDTO(
+                "Jenner",
+                "Durand",
+                "not-a-date",
+                null,
+                "jenner@crediya.com",
+                "12345678",
+                "98765432",
+                new BigDecimal("3000000")
+        );
+
+        when(dtoValidator.validate(dto))
+                .thenReturn(Mono.error(new ConstraintViolationException(Set.of())));
+
+        webTestClient.post()
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchange()
+                .expectStatus().is4xxClientError()
+                .expectBody()
+                .jsonPath("$.status").isEqualTo(422);
+    }
+
 }

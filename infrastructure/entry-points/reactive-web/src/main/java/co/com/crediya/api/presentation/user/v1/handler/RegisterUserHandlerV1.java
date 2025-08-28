@@ -6,7 +6,6 @@ import co.com.crediya.api.dto.user.UserDTO;
 import co.com.crediya.api.mapper.UserDTOMapper;
 import co.com.crediya.api.presentation.contract.DTOValidator;
 import co.com.crediya.api.presentation.contract.RouteHandler;
-import co.com.crediya.api.validation.DTOValidatorImp;
 import co.com.crediya.usecase.registeruser.RegisterUserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -40,7 +39,9 @@ public class RegisterUserHandlerV1 implements RouteHandler {
     )
     @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente",
             content = @Content(schema = @Schema(implementation = UserDTO.class)))
-    @ApiResponse(responseCode = "400", description = "Error de validación",
+    @ApiResponse(responseCode = "400", description = "Error de dominio",
+            content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+    @ApiResponse(responseCode = "422", description = "Error de validación",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
     @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
