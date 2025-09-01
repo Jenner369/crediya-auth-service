@@ -29,9 +29,11 @@ class DTOValidatorImpTest {
                 "1996-12-12",
                 null,
                 "jenner@crediya.com",
+                "Jenner123*/",
                 "12345678",
                 "98765432",
-                new BigDecimal("3000000")
+                new BigDecimal("3000000"),
+                null
         );
 
         StepVerifier.create(dtoValidator.validate(dto))
@@ -47,9 +49,11 @@ class DTOValidatorImpTest {
                 "1996-12-12",
                 null,
                 "jenner@crediya.com",
-                "",
+                "Jenner123*/",
+                "12345678",
                 "98765432",
-                new BigDecimal("3000000")
+                new BigDecimal("3000000"),
+                null
         );
 
         StepVerifier.create(dtoValidator.validate(dto))
