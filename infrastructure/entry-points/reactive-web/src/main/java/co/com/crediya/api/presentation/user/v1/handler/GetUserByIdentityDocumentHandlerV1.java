@@ -3,7 +3,7 @@ package co.com.crediya.api.presentation.user.v1.handler;
 import co.com.crediya.api.dto.common.ErrorResponseDTO;
 import co.com.crediya.api.dto.user.UserDTO;
 import co.com.crediya.api.mapper.UserDTOMapper;
-import co.com.crediya.api.presentation.contract.RouteHandler;
+import co.com.crediya.api.contract.RouteHandler;
 import co.com.crediya.usecase.getuserbyidentitydocument.GetUserByIdentityDocumentUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

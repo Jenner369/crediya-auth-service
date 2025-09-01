@@ -15,7 +15,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
 public class UserRouterV1 {
-    @Bean
+    @Bean("userRouterFunction")
     @RouterOperations({
             @RouterOperation(
                     path = "/api/v1/usuarios",
