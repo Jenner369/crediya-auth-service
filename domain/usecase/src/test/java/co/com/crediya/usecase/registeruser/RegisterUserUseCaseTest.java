@@ -2,8 +2,10 @@ package co.com.crediya.usecase.registeruser;
 
 import co.com.crediya.exception.EmailAlreadyExistsException;
 import co.com.crediya.exception.IdentityDocumentAlreadyExists;
+import co.com.crediya.model.common.gateways.PasswordEncoderGateway;
 import co.com.crediya.model.common.gateways.TransactionalGateway;
 import co.com.crediya.model.role.enums.Roles;
+import co.com.crediya.model.role.gateways.RoleRepository;
 import co.com.crediya.model.user.User;
 import co.com.crediya.model.user.gateways.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +28,13 @@ class RegisterUserUseCaseTest {
     private UserRepository userRepository;
 
     @Mock
+    private RoleRepository roleRepository;
+
+    @Mock
     private TransactionalGateway transactionalGateway;
+
+    @Mock
+    private PasswordEncoderGateway passwordEncoderGateway;
 
     @InjectMocks
     private RegisterUserUseCase registerUserUseCase;
@@ -40,6 +48,7 @@ class RegisterUserUseCaseTest {
                 .name("Jenner")
                 .lastName("Durand")
                 .email("jenner@crediya.com")
+                .password("Jenner123*/")
                 .identityDocument("12345678")
                 .telephone("987654321")
                 .roleId(Roles.CLIENT.getId())
@@ -52,6 +61,8 @@ class RegisterUserUseCaseTest {
         when(userRepository.existsByEmail(user.getEmail())).thenReturn(Mono.just(false));
         when(userRepository.existsByIdentityDocument(user.getIdentityDocument())).thenReturn(Mono.just(false));
         when(userRepository.save(any(User.class))).thenReturn(Mono.just(user));
+        when(passwordEncoderGateway.encode(user.getPassword())).thenReturn(Mono.just("encodedPassword"));
+        when(roleRepository.findById(user.getRoleId())).thenReturn(Mono.just(Roles.CLIENT.toModel()));
         when(transactionalGateway.execute(any()))
                 .thenAnswer(invocation -> {
                     Supplier<Mono<?>> supplier = invocation.getArgument(0);
