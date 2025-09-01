@@ -1,5 +1,6 @@
 package co.com.crediya.model.role.enums;
 
+import co.com.crediya.model.role.Role;
 import lombok.Getter;
 
 import java.util.UUID;
@@ -18,5 +19,13 @@ public enum Roles {
         this.id = id;
         this.name = name;
         this.description = description;
+    }
+
+    public Role toModel() {
+        return Role.builder()
+                .id(this.id)
+                .name(this.name)
+                .description(this.description)
+                .build();
     }
 }

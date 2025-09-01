@@ -7,9 +7,7 @@ import co.com.crediya.r2dbc.helper.ReactiveAdapterOperations;
 import co.com.crediya.r2dbc.repository.RoleReactiveRepository;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
@@ -21,12 +19,5 @@ public class RoleReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 > implements RoleRepository {
     public RoleReactiveRepositoryAdapter(RoleReactiveRepository repository, ObjectMapper mapper) {
         super(repository, mapper, d -> mapper.map(d, Role.class));
-    }
-
-    @Override
-    public Mono<Optional<Role>> findByName(String name) {
-        return repository.findByName(name)
-                .map(roleEntity -> roleEntity.map(this::toEntity))
-                .defaultIfEmpty(Optional.empty());
     }
 }
