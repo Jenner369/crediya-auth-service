@@ -1,10 +1,10 @@
 package co.com.crediya.api.dto.user;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 import java.math.BigDecimal;
 
@@ -30,6 +30,10 @@ public record RegisterUserDTO(
         @NotBlank(message = "El email es obligatorio")
         String email,
 
+        @Schema(description = "Clave del usuario", example = "P@ssw0rd!")
+        @NotBlank(message = "La clave es obligatoria")
+        String password,
+
         @Schema(description = "Documento de identidad del usuario", example = "78876789")
         @NotBlank(message = "El documento de identidad es obligatorio")
         String identityDocument,
@@ -39,6 +43,9 @@ public record RegisterUserDTO(
 
         @Schema(description = "Salario base del usuario", example = "2500000")
         @NotNull(message = "El salario base es obligatorio")
-        BigDecimal baseSalary
+        BigDecimal baseSalary,
+
+        @Schema(description = "ID del rol asignado al usuario", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
+        String roleId
 ) {
 }
