@@ -68,6 +68,7 @@ class ApplicationAuthenticationManagerTest {
         var authentication = new UsernamePasswordAuthenticationToken(token, token);
 
         StepVerifier.create(authManager.authenticate(authentication))
+                .expectNextCount(0)
                 .verifyComplete();
     }
 }
