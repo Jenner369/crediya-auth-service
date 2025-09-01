@@ -1,8 +1,5 @@
 package co.com.crediya.model.user;
-import co.com.crediya.model.user.exceptions.EmailInvalidException;
-import co.com.crediya.model.user.exceptions.LastNameRequiredException;
-import co.com.crediya.model.user.exceptions.NameRequiredException;
-import co.com.crediya.model.user.exceptions.SalaryOutOfRangeException;
+import co.com.crediya.model.user.exceptions.*;
 import lombok.Builder;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,6 +22,7 @@ public class User {
     private LocalDate birthDate;
     private String address;
     private String email;
+    private String password;
     private String identityDocument;
     private String telephone;
     private UUID roleId;
@@ -37,6 +35,7 @@ public class User {
         validateLastName(this.lastName);
         validateEmail(this.email);
         validateBaseSalary(this.baseSalary);
+        validatePassword(this.password);
     }
 
     private void validateName(String name) {
@@ -62,5 +61,20 @@ public class User {
                 || baseSalary.compareTo(MAX_SALARY) > 0) {
             throw new SalaryOutOfRangeException(BigDecimal.ZERO, MAX_SALARY);
         }
+    }
+
+    private void validatePassword(String password) {
+        if (
+                password == null ||
+                password.length() < 8
+        ) {
+            throw new PasswordInvalidException();
+        }
+    }
+
+    public User setEncodedPassword(String encodedPassword) {
+        password = encodedPassword;
+
+        return this;
     }
 }

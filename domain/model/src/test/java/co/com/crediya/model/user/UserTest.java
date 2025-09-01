@@ -2,10 +2,7 @@ package co.com.crediya.model.user;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import co.com.crediya.model.user.exceptions.EmailInvalidException;
-import co.com.crediya.model.user.exceptions.LastNameRequiredException;
-import co.com.crediya.model.user.exceptions.NameRequiredException;
-import co.com.crediya.model.user.exceptions.SalaryOutOfRangeException;
+import co.com.crediya.model.user.exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -19,6 +16,7 @@ class UserTest {
                 .name("Jenner")
                 .lastName("Durand")
                 .email("jenner@crediya.com")
+                .password("Jenner123*/")
                 .identityDocument("12345678")
                 .telephone("987654321")
                 .roleId(UUID.randomUUID())
@@ -110,5 +108,18 @@ class UserTest {
                 .build();
 
         assertThrows(SalaryOutOfRangeException.class, user::validate);
+    }
+
+    @Test
+    void shouldThrowPasswordInvalidExceptionWhenPasswordIsNull() {
+        User user = User.builder()
+                .name("Jenner")
+                .lastName("Durand")
+                .email("jenner@crediya.com")
+                .password(null)
+                .baseSalary(BigDecimal.valueOf(1000))
+                .build();
+
+        assertThrows(PasswordInvalidException.class, user::validate);
     }
 }
