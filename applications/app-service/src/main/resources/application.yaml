@@ -35,3 +35,7 @@ adapters:
     database: crediya_auth
     username: crediya_auth_user
     password: crediya_auth_pass
+
+jwt:
+  secret: "superLongSecretKeyChangeMeToAtLeast32Bytes"
+  expiration-hours: 5

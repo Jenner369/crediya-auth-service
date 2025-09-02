@@ -1,12 +1,11 @@
 package co.com.crediya.api.presentation.user.v1.handler;
 
+import co.com.crediya.api.contract.*;
 import co.com.crediya.api.dto.common.ErrorResponseDTO;
 import co.com.crediya.api.dto.user.RegisterUserDTO;
 import co.com.crediya.api.dto.user.UserDTO;
 import co.com.crediya.api.mapper.UserDTOMapper;
-import co.com.crediya.api.presentation.contract.DTOValidator;
-import co.com.crediya.api.presentation.contract.RouteHandler;
-import co.com.crediya.api.validation.DTOValidatorImp;
+import co.com.crediya.model.role.enums.Roles;
 import co.com.crediya.usecase.registeruser.RegisterUserUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -27,6 +26,8 @@ public class RegisterUserHandlerV1 implements RouteHandler {
     private final UserDTOMapper userDTOMapper;
     private final RegisterUserUseCase registerUserUseCase;
     private final DTOValidator dtoValidator;
+    private final UUIDValidator uuidValidator;
+    private final RoleValidator roleValidator;
 
     @Operation(
             tags = {"User API"},
@@ -40,7 +41,9 @@ public class RegisterUserHandlerV1 implements RouteHandler {
     )
     @ApiResponse(responseCode = "200", description = "Usuario registrado correctamente",
             content = @Content(schema = @Schema(implementation = UserDTO.class)))
-    @ApiResponse(responseCode = "400", description = "Error de validación",
+    @ApiResponse(responseCode = "400", description = "Error de dominio",
+            content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
+    @ApiResponse(responseCode = "422", description = "Error de validación",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
     @ApiResponse(responseCode = "500", description = "Error interno del servidor",
             content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))
@@ -52,6 +55,10 @@ public class RegisterUserHandlerV1 implements RouteHandler {
                     log.info("[{}] POST /api/v1/usuarios - Intento de registro", rid);
                 })
                 .flatMap(dtoValidator::validate)
+                .flatMap(dto -> roleValidator.validateRole(Roles.ADVISOR, Roles.ADMIN).then(Mono.just(dto)))
+                .flatMap(user -> Mono.justOrEmpty(user.roleId())
+                        .flatMap(uuidValidator::validate)
+                        .thenReturn(user))
                 .map(userDTOMapper::toModelFromRegisterDTO)
                 .flatMap(registerUserUseCase::execute)
                 .doOnNext(user -> {

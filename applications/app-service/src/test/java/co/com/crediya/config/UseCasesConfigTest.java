@@ -1,5 +1,6 @@
 package co.com.crediya.config;
 
+import co.com.crediya.model.common.gateways.PasswordEncoderGateway;
 import co.com.crediya.model.common.gateways.TransactionalGateway;
 import co.com.crediya.model.role.gateways.RoleRepository;
 import co.com.crediya.model.user.gateways.UserRepository;
@@ -47,6 +48,11 @@ class UseCasesConfigTest {
         @Bean
         public TransactionalGateway transactionalGateway() {
             return mock(TransactionalGateway.class);
+        }
+
+        @Bean
+        public PasswordEncoderGateway passwordEncoderGateway() {
+            return mock(PasswordEncoderGateway.class);
         }
 
         @Bean

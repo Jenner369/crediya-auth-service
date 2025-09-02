@@ -3,8 +3,12 @@ package co.com.crediya.usecase.registeruser;
 import co.com.crediya.contract.ReactiveUseCase;
 import co.com.crediya.exception.EmailAlreadyExistsException;
 import co.com.crediya.exception.IdentityDocumentAlreadyExists;
+import co.com.crediya.exception.RoleNotFoundException;
+import co.com.crediya.model.common.gateways.PasswordEncoderGateway;
 import co.com.crediya.model.common.gateways.TransactionalGateway;
+import co.com.crediya.model.role.Role;
 import co.com.crediya.model.role.enums.Roles;
+import co.com.crediya.model.role.gateways.RoleRepository;
 import co.com.crediya.model.user.User;
 import co.com.crediya.model.user.gateways.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +18,8 @@ import reactor.core.publisher.Mono;
 public class RegisterUserUseCase implements ReactiveUseCase<User, Mono<User>> {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final PasswordEncoderGateway passwordEncoderGateway;
     private final TransactionalGateway transactionalGateway;
 
     @Override
@@ -22,6 +28,7 @@ public class RegisterUserUseCase implements ReactiveUseCase<User, Mono<User>> {
                 .then(transactionalGateway.execute(
                         () -> validateEmailNotExists(user)
                                 .flatMap(this::validateIdentityNotExists)
+                                .flatMap(this::encodePassword)
                                 .flatMap(this::assignDefaultRole)
                                 .flatMap(userRepository::save)
                 ));
@@ -53,9 +60,22 @@ public class RegisterUserUseCase implements ReactiveUseCase<User, Mono<User>> {
                 });
     }
 
-    private Mono<User> assignDefaultRole(User user) {
-        user.setRoleId(Roles.CLIENT.getId());
+    private Mono<User> encodePassword(User user) {
+        return passwordEncoderGateway.encode(user.getPassword())
+                .map(user::setEncodedPassword);
+    }
 
-        return Mono.just(user);
+    private Mono<User> assignDefaultRole(User user) {
+        var roleIdMono = user.getRoleId() == null
+                ? Mono
+                    .just(Roles.CLIENT.getId())
+                : roleRepository.findById(user.getRoleId())
+                    .map(Role::getId)
+                    .switchIfEmpty(Mono.error(new RoleNotFoundException()));
+
+        return roleIdMono.map(roleId -> {
+            user.setRoleId(roleId);
+            return user;
+        });
     }
 }

@@ -1,6 +1,6 @@
 package co.com.crediya.api.validation;
 
-import co.com.crediya.api.presentation.contract.UUIDValidator;
+import co.com.crediya.api.contract.UUIDValidator;
 import co.com.crediya.api.validation.exception.InvalidUUIDException;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -16,5 +16,10 @@ public class UUIDValidatorImp implements UUIDValidator {
         } catch (IllegalArgumentException e) {
             return Mono.error(new InvalidUUIDException(id));
         }
+    }
+
+    @Override
+    public Mono<Void> validateExists(String id) {
+        return validate(id).then();
     }
 }

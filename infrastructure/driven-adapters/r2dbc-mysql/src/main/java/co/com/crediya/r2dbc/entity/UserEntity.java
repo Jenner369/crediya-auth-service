@@ -25,6 +25,7 @@ public class UserEntity implements HasUUID {
     private LocalDate birthDate;
     private String address;
     private String email;
+    private String password;
     private String identityDocument;
     private String telephone;
     private UUID roleId;
