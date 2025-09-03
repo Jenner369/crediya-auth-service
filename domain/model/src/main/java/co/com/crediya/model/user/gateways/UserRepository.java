@@ -4,12 +4,14 @@ import co.com.crediya.model.user.User;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository {
     Mono<User> findById(UUID id);
     Flux<User> findAll();
+    Flux<User> findAllByIdentityDocuments(List<String> identityDocuments);
 
     Mono<User> findByEmail(String email);
     Mono<Boolean> existsByEmail(String email);
