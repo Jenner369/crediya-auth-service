@@ -4,6 +4,7 @@ import co.com.crediya.api.contract.RoleValidator;
 import co.com.crediya.api.contract.TokenProvider;
 import co.com.crediya.api.dto.common.ClaimsDTO;
 import co.com.crediya.api.dto.user.RegisterUserDTO;
+import co.com.crediya.api.dto.user.SearchListUsersByIdentityDocumentsDTO;
 import co.com.crediya.api.dto.user.UserDTO;
 import co.com.crediya.api.exception.GlobalErrorAttributes;
 import co.com.crediya.api.exception.GlobalExceptionHandler;
@@ -14,11 +15,13 @@ import co.com.crediya.api.presentation.auth.v1.handler.LoginUserHandlerV1;
 import co.com.crediya.api.presentation.user.v1.UserRouterV1;
 import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdHandlerV1;
 import co.com.crediya.api.presentation.user.v1.handler.GetUserByIdentityDocumentHandlerV1;
+import co.com.crediya.api.presentation.user.v1.handler.ListUsersByIdentityDocumentsHandlerV1;
 import co.com.crediya.api.presentation.user.v1.handler.RegisterUserHandlerV1;
 import co.com.crediya.model.role.enums.Roles;
 import co.com.crediya.model.user.User;
 import co.com.crediya.usecase.getuserbyid.GetUserByIdUseCase;
 import co.com.crediya.usecase.getuserbyidentitydocument.GetUserByIdentityDocumentUseCase;
+import co.com.crediya.usecase.listusersbyidentitydocuments.ListUsersByIdentityDocumentsUseCase;
 import co.com.crediya.usecase.loginuser.LoginUserUseCase;
 import co.com.crediya.usecase.registeruser.RegisterUserUseCase;
 import jakarta.validation.ConstraintViolationException;
@@ -40,6 +43,7 @@ import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.mockito.Mockito.*;
@@ -58,6 +62,7 @@ import java.util.UUID;
         GetUserByIdHandlerV1.class,
         LoginUserHandlerV1.class,
         GetUserByIdentityDocumentHandlerV1.class,
+        ListUsersByIdentityDocumentsHandlerV1.class,
         UserRouterV1Test.TestConfig.class,
         UserRouterV1Test.TestSecurityConfig.class
 })
@@ -78,6 +83,9 @@ class UserRouterV1Test {
 
     @MockitoBean
     private GetUserByIdentityDocumentUseCase getUserByIdentityDocumentUseCase;
+
+    @MockitoBean
+    private ListUsersByIdentityDocumentsUseCase listUsersByIdentityDocumentsUseCase;
 
     @MockitoBean
     private UserDTOMapper userDTOMapper;
@@ -324,4 +332,84 @@ class UserRouterV1Test {
                 .jsonPath("$.status").isEqualTo(422);
     }
 
+    @Test
+    void testListUsersByIdentityDocumentsSuccess() {
+        var dto = new SearchListUsersByIdentityDocumentsDTO(
+                List.of("12345678", "87654321")
+        );
+
+        var user1 = new User(
+                UUID.randomUUID(),
+                "Jenner",
+                "Durand",
+                LocalDate.of(1991, 1, 1),
+                "Calle 123",
+                "jenner@crediya.com",
+                "Jenner123*/",
+                "12345678",
+                "987654321",
+                Roles.CLIENT.getId(),
+                new BigDecimal("3000000")
+        );
+
+        var user2 = new User(
+                UUID.randomUUID(),
+                "Carlos",
+                "Perez",
+                LocalDate.of(1990, 5, 10),
+                "Calle 456",
+                "carlos@crediya.com",
+                "Carlos123*/",
+                "87654321",
+                "123456789",
+                Roles.ADVISOR.getId(),
+                new BigDecimal("4000000")
+        );
+
+        var userDTO1 = new UserDTO(
+                user1.getId().toString(),
+                user1.getName(),
+                user1.getLastName(),
+                user1.getBirthDate().toString(),
+                user1.getAddress(),
+                user1.getEmail(),
+                user1.getIdentityDocument(),
+                user1.getTelephone(),
+                user1.getRoleId().toString(),
+                user1.getBaseSalary()
+        );
+
+        var userDTO2 = new UserDTO(
+                user2.getId().toString(),
+                user2.getName(),
+                user2.getLastName(),
+                user2.getBirthDate().toString(),
+                user2.getAddress(),
+                user2.getEmail(),
+                user2.getIdentityDocument(),
+                user2.getTelephone(),
+                user2.getRoleId().toString(),
+                user2.getBaseSalary()
+        );
+
+        when(roleValidator.validateRole(Roles.ADVISOR)).thenReturn(Mono.empty());
+        when(listUsersByIdentityDocumentsUseCase.execute(dto.identityDocuments()))
+                .thenReturn(Flux.just(user1, user2));
+        when(userDTOMapper.toUserDTOFromModel(user1)).thenReturn(userDTO1);
+        when(userDTOMapper.toUserDTOFromModel(user2)).thenReturn(userDTO2);
+
+        webTestClient.post()
+                .uri("/api/v1/usuarios/identity-documents")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer fake-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(dto)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UserDTO.class)
+                .value(users -> {
+                    Assertions.assertThat(users).hasSize(2);
+                    Assertions.assertThat(users.get(0).email()).isEqualTo(user1.getEmail());
+                    Assertions.assertThat(users.get(1).email()).isEqualTo(user2.getEmail());
+                });
+    }
 }

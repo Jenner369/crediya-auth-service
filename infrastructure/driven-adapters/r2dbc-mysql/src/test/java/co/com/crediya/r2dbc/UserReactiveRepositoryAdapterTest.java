@@ -17,6 +17,7 @@ import reactor.test.StepVerifier;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -132,6 +133,71 @@ class UserReactiveRepositoryAdapterTest {
 
         StepVerifier.create(repositoryAdapter.findByIdentityDocument("123456"))
                 .expectNext(sampleUser)
+                .verifyComplete();
+    }
+
+    @Test
+    void mustFindAllByIdentityDocuments() {
+        var user1 = User.builder()
+                .id(UUID.randomUUID())
+                .name("Jenner")
+                .lastName("Durand")
+                .email("jenner@crediya.com")
+                .identityDocument("12345678")
+                .telephone("987654321")
+                .roleId(Roles.CLIENT.getId())
+                .baseSalary(new BigDecimal("50000"))
+                .build();
+
+        var userEntity1 = new UserEntity(
+                user1.getId(),
+                user1.getName(),
+                user1.getLastName(),
+                user1.getBirthDate(),
+                user1.getAddress(),
+                user1.getEmail(),
+                user1.getPassword(),
+                user1.getIdentityDocument(),
+                user1.getTelephone(),
+                user1.getRoleId(),
+                user1.getBaseSalary()
+        );
+
+        var user2 = User.builder()
+                .id(UUID.randomUUID())
+                .name("Carlos")
+                .lastName("Perez")
+                .email("carlos@crediya.com")
+                .identityDocument("87654321")
+                .telephone("123456789")
+                .roleId(Roles.ADVISOR.getId())
+                .baseSalary(new BigDecimal("70000"))
+                .build();
+
+        var userEntity2 = new UserEntity(
+                user2.getId(),
+                user2.getName(),
+                user2.getLastName(),
+                user2.getBirthDate(),
+                user2.getAddress(),
+                user2.getEmail(),
+                user2.getPassword(),
+                user2.getIdentityDocument(),
+                user2.getTelephone(),
+                user2.getRoleId(),
+                user2.getBaseSalary()
+        );
+
+        when(mapper.map(userEntity1, User.class)).thenReturn(user1);
+        when(mapper.map(userEntity2, User.class)).thenReturn(user2);
+
+        var identityDocuments = List.of("12345678", "87654321");
+        when(repository.findAllByIdentityDocumentIn(identityDocuments))
+                .thenReturn(Flux.just(userEntity1, userEntity2));
+
+        StepVerifier.create(repositoryAdapter.findAllByIdentityDocuments(identityDocuments))
+                .expectNextMatches(userResponse1 -> userResponse1.getId().equals(user1.getId()))
+                .expectNextMatches(userResponse2 -> userResponse2.getId().equals(user2.getId()))
                 .verifyComplete();
     }
 
