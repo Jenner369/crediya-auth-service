@@ -9,9 +9,9 @@ spring:
     add-properties: false
 
   flyway:
-    url: jdbc:mysql://localhost:3306/crediya_auth
-    user: crediya_auth_user
-    password: crediya_auth_pass
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    user: ${DB_USER}
+    password: ${DB_PASS}
     locations: classpath:db/migration
     baseline-on-migrate: true
 
@@ -26,16 +26,16 @@ management:
         enabled: true
 
 cors:
-  allowed-origins: "http://localhost:4200,http://localhost:8080"
+  allowed-origins: ${CORS_ALLOWED_ORIGINS}
 
 adapters:
   r2dbc:
-    host: localhost
-    port: 3306
-    database: crediya_auth
-    username: crediya_auth_user
-    password: crediya_auth_pass
+    host: ${DB_HOST}
+    port: ${DB_PORT}
+    database: ${DB_NAME}
+    username: ${DB_USER}
+    password: ${DB_PASS}
 
 jwt:
-  secret: "superLongSecretKeyChangeMeToAtLeast32Bytes"
-  expiration-hours: 5
+  secret: ${JWT_SECRET}
+  expiration-hours: ${JWT_EXPIRATION_HOURS}
