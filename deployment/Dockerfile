@@ -5,6 +5,9 @@ WORKDIR /app
 # Copiamos todo el proyecto (para compilar si se necesita)
 COPY . .
 
+# Asegurar permisos de gradlew
+RUN chmod +x gradlew
+
 # Compilamos con Gradle (se puede desactivar si ya tienes JAR)
 RUN ./gradlew clean build -x validateStructure -x test --no-daemon
 
