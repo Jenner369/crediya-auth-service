@@ -5,7 +5,7 @@ phases:
     commands:
       - echo "Iniciando login en Amazon ECR..."
       - aws --version
-      - $(aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 598399550549.dkr.ecr.us-east-2.amazonaws.com)
+      - aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 598399550549.dkr.ecr.us-east-2.amazonaws.com
       - REPOSITORY_URI=598399550549.dkr.ecr.us-east-2.amazonaws.com/crediya-auth-service
       - IMAGE_TAG=$(date +%Y%m%d%H%M%S)
   build:
