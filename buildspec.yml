@@ -16,7 +16,7 @@ phases:
     commands:
       - echo "Subiendo imagen a ECR..."
       - docker push $REPOSITORY_URI:$IMAGE_TAG
-      - echo "Escribiendo imagedefinitions.json..."
+      - echo "Escribiendo en imagedefinitions.json..."
       - printf '[{"name":"crediya-auth-service","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
