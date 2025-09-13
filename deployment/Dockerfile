@@ -15,6 +15,9 @@ RUN ./gradlew clean build -x validateStructure -x test --no-daemon
 FROM eclipse-temurin:17-jdk-alpine AS runtime
 WORKDIR /app
 
+# Instalar curl
+RUN apk add --no-cache curl
+
 # Creamos un usuario no root
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 
